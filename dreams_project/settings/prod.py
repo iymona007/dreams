@@ -21,3 +21,10 @@ CSRF_COOKIE_SECURE = True
 SECURE_SSL_REDIRECT = True
 SECURE_HSTS_SECONDS = 31536000
 SECURE_CONTENT_TYPE_NOSNIFF = True
+
+import os
+
+if not os.environ.get('DATABASE_URL'):
+    raise ImproperlyConfigured(
+        "Render'da DATABASE_URL topilmadi!"
+    )
