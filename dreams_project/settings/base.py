@@ -66,7 +66,9 @@ TEMPLATES = [
     },
 ]
 
-# --- Database: PostgreSQL (USE_SQLITE=1 bo'lsa SQLite) ---
+
+# --- Database: Render PostgreSQL / Local PostgreSQL / SQLite ---
+
 if os.environ.get('USE_SQLITE') == '1':
     DATABASES = {
         'default': {
@@ -74,6 +76,18 @@ if os.environ.get('USE_SQLITE') == '1':
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
+
+elif os.environ.get('DATABASE_URL'):
+    import dj_database_url
+
+    DATABASES = {
+        'default': dj_database_url.config(
+            conn_max_age=600,
+            conn_health_checks=True,
+            ssl_require=True,
+        )
+    }
+
 else:
     DATABASES = {
         'default': {
@@ -85,6 +99,7 @@ else:
             'PORT': os.environ.get('DB_PORT', '5433'),
         }
     }
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
