@@ -1,0 +1,36 @@
+{% with imgs=dream.images.all %}
+{% with n=imgs|length %}
+<article class="card">
+    {% if n %}
+        <a href="{% url 'dream_detail' dream.pk %}" class="collage {% if n >= 3 %}c3{% elif n == 2 %}c2{% else %}c1{% endif %}">
+            {% for img in imgs|slice:":3" %}
+                <div class="ph" style="background-image:url('{{ img.image.url }}')">
+                    {% if forloop.counter == 3 and n > 3 %}<span class="more-n">+{{ n|add:"-3" }}</span>{% endif %}
+                </div>
+            {% endfor %}
+        </a>
+    {% endif %}
+    <div class="card-body">
+        {% if dream.text %}
+            <p class="card-text"><a href="{% url 'dream_detail' dream.pk %}">{{ dream.text|truncatechars:220 }}</a></p>
+        {% endif %}
+        <div class="card-meta">
+            <a href="{% url 'profile' dream.user.username %}" class="author">@{{ dream.user.username }}</a>
+            <span class="badge badge-{{ dream.stage }}">{{ dream.get_stage_display }}</span>
+            {% if dream.category %}<span class="badge">{{ dream.get_category_display }}</span>{% endif %}
+            {% if dream.mood %}<span>{{ dream.get_mood_display|slice:":1" }}</span>{% endif %}
+            {% if dream.is_private %}<span title="Private">🔒</span>{% endif %}
+        </div>
+        <div class="journey">
+            {% for s in dream.journey %}
+                <i class="{% if s.done %}d{% endif %}" title="{{ s.label }}">{{ s.emoji }}</i>{% if not forloop.last %}<u class="{% if s.line_done %}d{% endif %}"></u>{% endif %}
+            {% endfor %}
+        </div>
+        <div class="card-footer">
+            <span class="date">{{ dream.created_at|date:"d.m.Y" }}</span>
+            <a href="{% url 'dream_detail' dream.pk %}" class="more">Batafsil →</a>
+        </div>
+    </div>
+</article>
+{% endwith %}
+{% endwith %}

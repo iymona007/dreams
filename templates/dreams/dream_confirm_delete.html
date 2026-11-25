@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}O'chirish{% endblock %}
+{% block content %}
+<div class="form-box">
+    <h2>Orzuni o'chirasizmi?</h2>
+    <p class="hint">Orzu va uning barcha rasmlari butunlay o'chadi. Bu amalni ortga qaytarib bo'lmaydi.</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Ha, o'chirish</button>
+        <a href="{% url 'dream_detail' object.pk %}" class="btn btn-ghost">Yo'q</a>
+    </form>
+</div>
+{% endblock %}

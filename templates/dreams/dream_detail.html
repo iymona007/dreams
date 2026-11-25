@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}Orzu{% endblock %}
+{% block content %}
+<article class="detail">
+    {% if dream.images.all %}
+        <div class="gallery">
+            {% for img in dream.images.all %}
+                <a href="{{ img.image.url }}" target="_blank" rel="noopener">
+                    <img src="{{ img.image.url }}" alt="Orzu rasmi" loading="lazy">
+                </a>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% if dream.text %}
+        <p class="detail-text">{{ dream.text|linebreaksbr }}</p>
+    {% endif %}
+    <div class="journey big">
+        {% for s in dream.journey %}
+            <i class="{% if s.done %}d{% endif %}" title="{{ s.label }}">{{ s.emoji }}</i>{% if not forloop.last %}<u class="{% if s.line_done %}d{% endif %}"></u>{% endif %}
+        {% endfor %}
+    </div>
+    <div class="card-meta">
+        <a href="{% url 'profile' dream.user.username %}" class="author">@{{ dream.user.username }}</a>
+        <span class="badge badge-{{ dream.stage }}">{{ dream.get_stage_display }}</span>
+        {% if dream.category %}<span class="badge">{{ dream.get_category_display }}</span>{% endif %}
+        {% if dream.mood %}<span class="badge">{{ dream.get_mood_display }}</span>{% endif %}
+        {% if dream.is_private %}<span class="badge">🔒 Private</span>{% endif %}
+        <span class="date">{{ dream.created_at|date:"d.m.Y H:i" }}</span>
+    </div>
+    {% if user == dream.user %}
+        <div class="actions">
+            <a href="{% url 'dream_update' dream.pk %}" class="btn btn-primary btn-sm">✏️ Tahrirlash</a>
+            <a href="{% url 'dream_delete' dream.pk %}" class="btn btn-danger btn-sm">🗑️ O'chirish</a>
+        </div>
+    {% endif %}
+    <p><a href="{% url 'feed' %}" class="more">← Barcha orzular</a></p>
+</article>
+{% endblock %}

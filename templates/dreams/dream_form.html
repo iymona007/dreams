@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<div class="form-box wide">
+    <h2>{{ title }}</h2>
+    <p class="hint">Xohlagancha yozing, xohlagancha rasm qo'shing. Kamida bittasi kerak.</p>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+            <div class="alert alert-error">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        <div class="field">
+            <label for="{{ form.text.id_for_label }}">{{ form.text.label }}</label>
+            {{ form.text }}
+            <small class="counter"><span id="charCount">0</span> ta belgi · cheklov yo'q</small>
+            {{ form.text.errors }}
+        </div>
+
+        <div class="field">
+            <label>Rasmlar <span class="small">(xohlagancha, bir nechta tanlash mumkin)</span></label>
+            {% if form.instance.pk and form.instance.images.all %}
+                <div class="thumbs">
+                    {% for img in form.instance.images.all %}
+                        <label class="th" style="background-image:url('{{ img.image.url }}')">
+                            <input type="checkbox" name="remove_images" value="{{ img.pk }}">
+                            <span>🗑️ olib tashlash</span>
+                        </label>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <label class="drop" for="{{ form.images.id_for_label }}">🖼️ Rasmlarni tanlash uchun bosing</label>
+            <div class="file-hidden">{{ form.images }}</div>
+            <div class="thumbs" id="previews"></div>
+            {{ form.images.errors }}
+        </div>
+
+        <div class="row">
+            <div class="field">
+                <label for="{{ form.stage.id_for_label }}">{{ form.stage.label }}</label>
+                {{ form.stage }}
+            </div>
+            <div class="field">
+                <label for="{{ form.category.id_for_label }}">{{ form.category.label }}</label>
+                {{ form.category }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="field">
+                <label for="{{ form.mood.id_for_label }}">{{ form.mood.label }}</label>
+                {{ form.mood }}
+            </div>
+            <div class="field">
+                <label for="{{ form.visibility.id_for_label }}">{{ form.visibility.label }}</label>
+                {{ form.visibility }}
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Saqlash</button>
+        <a href="{% url 'feed' %}" class="btn btn-ghost">Bekor qilish</a>
+    </form>
+</div>
+{% endblock %}

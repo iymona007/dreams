@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}Orzular{% endblock %}
+{% block content %}
+<section class="hero">
+    <h1>Orzularingni ulash 💜</h1>
+    <p>Orzuingni yoz, rasmlarini joyla va boshqalarning orzulari bilan ilhomlan.</p>
+    {% if user.is_authenticated %}
+        <a href="{% url 'dream_create' %}" class="btn btn-primary">+ Orzu qo'shish</a>
+    {% else %}
+        <a href="{% url 'register' %}" class="btn btn-primary">Boshlash</a>
+    {% endif %}
+</section>
+
+<form method="get" class="search">
+    <input type="text" name="q" value="{{ q }}" placeholder="Orzular ichidan qidirish...">
+    <select name="category">
+        <option value="">Barcha kolleksiyalar</option>
+        {% for value, label in categories %}
+            <option value="{{ value }}" {% if value == category %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+    </select>
+    <select name="stage">
+        <option value="">Barcha bosqichlar</option>
+        {% for value, label in stages %}
+            <option value="{{ value }}" {% if value == stage %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit" class="btn btn-primary">Qidirish</button>
+</form>
+
+{% if dreams %}
+    <div class="grid">
+        {% for dream in dreams %}
+            {% include 'dreams/_card.html' %}
+        {% endfor %}
+    </div>
+    {% include 'dreams/_pagination.html' %}
+{% else %}
+    <p class="empty">Hech narsa topilmadi. Birinchi orzuni siz joylang! ✨</p>
+{% endif %}
+{% endblock %}

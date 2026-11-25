@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Kirish{% endblock %}
+{% block content %}
+<div class="form-box">
+    <h2>Kirish</h2>
+    <form method="post">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+            <div class="alert alert-error">Login yoki parol noto'g'ri.</div>
+        {% endif %}
+        <div class="field">
+            <label for="{{ form.username.id_for_label }}">Foydalanuvchi nomi</label>
+            {{ form.username }}
+        </div>
+        <div class="field">
+            <label for="{{ form.password.id_for_label }}">Parol</label>
+            {{ form.password }}
+        </div>
+        <input type="hidden" name="next" value="{{ next }}">
+        <button type="submit" class="btn btn-primary">Kirish</button>
+    </form>
+    <p class="hint">Akkauntingiz yo'qmi? <a href="{% url 'register' %}">Ro'yxatdan o'ting</a></p>
+</div>
+{% endblock %}
